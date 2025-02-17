@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6 {color: #079da4;}
 
 # Sidebar Navigation
 with st.sidebar:
-    st.image("logo.png", width=150)
+    st.image("Logo.png", width=150)
     st.title("AISWO LIBRARY MANAGEMENT SYSTEM")
     page = st.radio("Go to", ["Home", "Issue Book"], key="nav_radio")
 
