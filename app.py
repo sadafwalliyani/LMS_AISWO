@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from utils import load_data, issue_book, return_book, get_issued_books
+from utils import issue_book, register_user, return_book, get_issued_books 
 
 # Page configuration
 st.set_page_config(page_title="AISWO LIBRARY MANAGEMENT SYSTEM", layout="wide")
@@ -19,7 +19,7 @@ h1, h2, h3, h4, h5, h6 {color: #079da4;}
 with st.sidebar:
     st.image("logo.png", width=150)
     st.title("AISWO LIBRARY MANAGEMENT SYSTEM")
-    page = st.radio("Go to", ["Home", "Issue Book"], key="nav_radio")
+    page = st.radio("Go to", ["Home", "Issue Book", "Registration"], key="nav_radio")
 
 # 📌 Home Page - Display Issued Books
 if page == "Home":
@@ -29,6 +29,7 @@ if page == "Home":
     issued_books = get_issued_books()
 
     if not issued_books.empty:
+        st.write("Here are the books currently issued:")
         for index, row in issued_books.iterrows():
             book_id = row['BookID']
             with st.container():
@@ -57,6 +58,7 @@ elif page == "Issue Book":
     st.title("📖 Issue New Book")
 
     with st.form("issue_form"):
+        st.write("Fill in the details to issue a new book:")
         book_id = st.text_input("Book ID", key="book_id")
         title = st.text_input("Title", key="title")
         issued_to = st.text_input("Issued To", key="issued_to")
@@ -67,3 +69,22 @@ elif page == "Issue Book":
                 st.success("✅ Book issued successfully!")
             else:
                 st.error("⚠ Error: Book ID already exists!")
+
+
+# 📌 Registration
+elif page == "Registration":
+    st.title("📝 Register New User")
+    st.write("Fill in the details to register a new user:")
+    with st.form("reg_form"):  
+        full_name = st.text_input("Full Name", key="full_name")
+        classname = st.text_input("Class", key="classname")
+        date_of_birth = st.date_input("Date of Birth", key="date_of_birth")
+        address = st.text_input("Address", key="address")
+        phone_number = st.text_input("Phone Number", key="phone_number")
+        email = st.text_input("Email Address", key="email")
+
+        if st.form_submit_button("Register"):
+            if register_user(full_name, classname, date_of_birth, address, phone_number, email):
+                st.success("✅ User registered successfully!")
+            else:
+                st.error("⚠ Error: User already exists!")
