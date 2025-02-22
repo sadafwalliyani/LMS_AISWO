@@ -3,10 +3,10 @@ import os
 import streamlit as st
 
 # # Define CSV file paths
-# CSV_FILE_LIBRARY = 'library_data.csv'
-# CSV_FILE_REGISTRATION = 'registration_newuser.csv'
-CSV_FILE_LIBRARY = '/workspaces/LMS_AISWO/library_data.csv'
-CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
+CSV_FILE_LIBRARY = 'library_data.csv'
+CSV_FILE_REGISTRATION = 'registration_newuser.csv'
+# CSV_FILE_LIBRARY = '/workspaces/LMS_AISWO/library_data.csv'
+# CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
 
 
 # Library Data Functions
