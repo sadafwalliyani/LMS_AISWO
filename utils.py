@@ -80,7 +80,8 @@ def load_registration_data():
         return df
     
     df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
-    df.to_csv(CSV_FILE_REGISTRATION, index=False)
+    # df.to_csv(CSV_FILE_REGISTRATION, index=False)
+    df.to_csv(CSV_FILE_REGISTRATION, index=False, mode='w', encoding='utf-8-sig')
     return df
 
 def save_registration_data(df):
