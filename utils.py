@@ -5,8 +5,6 @@ import streamlit as st
 # # Define CSV file paths
 CSV_FILE_LIBRARY = 'library_data.csv'
 CSV_FILE_REGISTRATION = 'registration_newuser.csv'
-# CSV_FILE_LIBRARY = '/workspaces/LMS_AISWO/library_data.csv'
-# CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
 
 
 # Library Data Functions
@@ -86,7 +84,8 @@ def load_registration_data():
 
 def save_registration_data(df):
     """Save the updated user registration records to CSV."""
-    df.to_csv(CSV_FILE_REGISTRATION, index=False)
+    # df.to_csv(CSV_FILE_REGISTRATION, index=False)
+    df.to_csv(CSV_FILE_REGISTRATION, index=False, mode='w', encoding='utf-8-sig')
 
 def register_user(full_name, classname, date_of_birth, address, phone_number, email):
     """Register a new user."""
