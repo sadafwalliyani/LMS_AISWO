@@ -3,8 +3,8 @@ import os
 import streamlit as st
 
 # Define persistent CSV file paths in the /workspaces directory
-CSV_FILE_LIBRARY = '/workspaces/library_data.csv'
-CSV_FILE_REGISTRATION = '/workspaces/registration_newuser.csv'
+CSV_FILE_LIBRARY = '/workspaces/LMS_AISWO/library_data.csv'
+CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
 
 # Debug: Print CSV file paths
 st.write(f"Library CSV path: {CSV_FILE_LIBRARY}")
