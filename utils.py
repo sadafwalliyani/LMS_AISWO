@@ -2,9 +2,13 @@ import pandas as pd
 import os
 import streamlit as st
 
-# Define absolute paths for CSV files
-CSV_FILE_LIBRARY = os.path.abspath('library_data.csv')
-CSV_FILE_REGISTRATION = os.path.abspath('registration_newuser.csv')
+# Define persistent CSV file paths in the /workspaces directory
+CSV_FILE_LIBRARY = '/workspaces/library_data.csv'
+CSV_FILE_REGISTRATION = '/workspaces/registration_newuser.csv'
+
+# Debug: Print CSV file paths
+st.write(f"Library CSV path: {CSV_FILE_LIBRARY}")
+st.write(f"Registration CSV path: {CSV_FILE_REGISTRATION}")
 
 # Library Data Functions
 def load_library_data():
@@ -12,6 +16,7 @@ def load_library_data():
     if os.path.exists(CSV_FILE_LIBRARY):
         try:
             df = pd.read_csv(CSV_FILE_LIBRARY, parse_dates=['IssueDate', 'ReturnDate'])
+            st.write("Library data loaded successfully!")
         except Exception as e:
             st.error(f"Error reading library CSV: {str(e)}")
             df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
@@ -19,18 +24,22 @@ def load_library_data():
         df['ReturnDate'] = pd.to_datetime(df['ReturnDate'], errors='coerce')
         return df
     
+    st.write("Library CSV not found. Creating a new one...")
     df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
-    df.to_csv(CSV_FILE_LIBRARY, index=False)
+    df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
     return df
 
 def save_library_data(df):
     """Save the updated book records to CSV."""
-    df.to_csv(CSV_FILE_LIBRARY, index=False)
+    st.write("Saving library data...")
+    df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
+    st.write("Library data saved successfully!")
 
 def issue_book(book_id, title, issued_to, issue_date):
     """Issue a new book, ensuring unique BookID."""
     df = load_library_data()
     if book_id in df['BookID'].astype(str).values:
+        st.error("Error: Book ID already exists!")
         return False
     
     new_entry = pd.DataFrame([{
@@ -71,20 +80,22 @@ def load_registration_data():
     if os.path.exists(CSV_FILE_REGISTRATION):
         try:
             df = pd.read_csv(CSV_FILE_REGISTRATION)
+            st.write("Registration data loaded successfully!")
         except Exception as e:
             st.error(f"Error reading registration CSV: {str(e)}")
             df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
         return df
     
+    st.write("Registration CSV not found. Creating a new one...")
     df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
-    # df.to_csv(CSV_FILE_REGISTRATION, index=False)
-    df.to_csv(CSV_FILE_REGISTRATION, index=False, mode='w', encoding='utf-8-sig')
+    df.to_csv(CSV_FILE_REGISTRATION, index=False, encoding='utf-8-sig')
     return df
 
 def save_registration_data(df):
     """Save the updated user registration records to CSV."""
-    # df.to_csv(CSV_FILE_REGISTRATION, index=False)
-    df.to_csv(CSV_FILE_REGISTRATION, index=False, mode='w', encoding='utf-8-sig')
+    st.write("Saving registration data...")
+    df.to_csv(CSV_FILE_REGISTRATION, index=False, encoding='utf-8-sig')
+    st.write("Registration data saved successfully!")
 
 def register_user(full_name, classname, date_of_birth, address, phone_number, email):
     """Register a new user."""
