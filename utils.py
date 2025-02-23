@@ -2,21 +2,18 @@ import pandas as pd
 import os
 import streamlit as st
 
-# Define persistent CSV file paths in the /workspaces directory
-CSV_FILE_LIBRARY = '/workspaces/LMS_AISWO/library_data.csv'
-CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
+# Define a writable CSV storage location
+CSV_DIR = "./data"
+CSV_FILE_LIBRARY = os.path.join(CSV_DIR, "library_data.csv")
+CSV_FILE_REGISTRATION = os.path.join(CSV_DIR, "registration_newuser.csv")
 
-# Debug: Print CSV file paths
-st.write(f"Library CSV path: {CSV_FILE_LIBRARY}")
-st.write(f"Registration CSV path: {CSV_FILE_REGISTRATION}")
-import os
+# Ensure the directory exists
+if not os.path.exists(CSV_DIR):
+    os.makedirs(CSV_DIR, exist_ok=True)
 
+# Library Data Functions
 def load_library_data():
-    """Load issued books data from CSV."""
-    directory = os.path.dirname(CSV_FILE_LIBRARY)
-    if not os.path.exists(directory):
-        os.makedirs(directory)  # Ensure the directory exists
-    
+    """Load issued books data from CSV or create a new one."""
     if os.path.exists(CSV_FILE_LIBRARY):
         try:
             df = pd.read_csv(CSV_FILE_LIBRARY, parse_dates=['IssueDate', 'ReturnDate'])
@@ -24,26 +21,18 @@ def load_library_data():
         except Exception as e:
             st.error(f"Error reading library CSV: {str(e)}")
             df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
-        
-        df['ReturnDate'] = pd.to_datetime(df['ReturnDate'], errors='coerce')
-        return df
-
-    st.write("Library CSV not found. Creating a new one...")
-    df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
-    df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
+    else:
+        st.write("Library CSV not found. Creating a new one...")
+        df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
+        df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
+    
+    df['ReturnDate'] = pd.to_datetime(df['ReturnDate'], errors='coerce')
     return df
-
 
 def save_library_data(df):
     """Save the updated book records to CSV."""
-    directory = os.path.dirname(CSV_FILE_LIBRARY)
-    if not os.path.exists(directory):
-        os.makedirs(directory)  # Ensure the directory exists
-    
-    st.write("Saving library data...")
     df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
     st.write("Library data saved successfully!")
-
 
 def issue_book(book_id, title, issued_to, issue_date):
     """Issue a new book, ensuring unique BookID."""
@@ -86,7 +75,7 @@ def get_issued_books():
 
 # User Registration Functions
 def load_registration_data():
-    """Load user registration data from CSV."""
+    """Load user registration data from CSV or create a new one."""
     if os.path.exists(CSV_FILE_REGISTRATION):
         try:
             df = pd.read_csv(CSV_FILE_REGISTRATION)
@@ -94,16 +83,15 @@ def load_registration_data():
         except Exception as e:
             st.error(f"Error reading registration CSV: {str(e)}")
             df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
-        return df
+    else:
+        st.write("Registration CSV not found. Creating a new one...")
+        df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
+        df.to_csv(CSV_FILE_REGISTRATION, index=False, encoding='utf-8-sig')
     
-    st.write("Registration CSV not found. Creating a new one...")
-    df = pd.DataFrame(columns=['Full Name', 'Class', 'Date of Birth', 'Address', 'Phone Number', 'Email'])
-    df.to_csv(CSV_FILE_REGISTRATION, index=False, encoding='utf-8-sig')
     return df
 
 def save_registration_data(df):
     """Save the updated user registration records to CSV."""
-    st.write("Saving registration data...")
     df.to_csv(CSV_FILE_REGISTRATION, index=False, encoding='utf-8-sig')
     st.write("Registration data saved successfully!")
 
