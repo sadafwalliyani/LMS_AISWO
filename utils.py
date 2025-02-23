@@ -9,10 +9,14 @@ CSV_FILE_REGISTRATION = '/workspaces/LMS_AISWO/registration_newuser.csv'
 # Debug: Print CSV file paths
 st.write(f"Library CSV path: {CSV_FILE_LIBRARY}")
 st.write(f"Registration CSV path: {CSV_FILE_REGISTRATION}")
+import os
 
-# Library Data Functions
 def load_library_data():
     """Load issued books data from CSV."""
+    directory = os.path.dirname(CSV_FILE_LIBRARY)
+    if not os.path.exists(directory):
+        os.makedirs(directory)  # Ensure the directory exists
+    
     if os.path.exists(CSV_FILE_LIBRARY):
         try:
             df = pd.read_csv(CSV_FILE_LIBRARY, parse_dates=['IssueDate', 'ReturnDate'])
@@ -23,17 +27,23 @@ def load_library_data():
         
         df['ReturnDate'] = pd.to_datetime(df['ReturnDate'], errors='coerce')
         return df
-    
+
     st.write("Library CSV not found. Creating a new one...")
     df = pd.DataFrame(columns=['BookID', 'Title', 'IssuedTo', 'IssueDate', 'ReturnDate'])
     df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
     return df
 
+
 def save_library_data(df):
     """Save the updated book records to CSV."""
+    directory = os.path.dirname(CSV_FILE_LIBRARY)
+    if not os.path.exists(directory):
+        os.makedirs(directory)  # Ensure the directory exists
+    
     st.write("Saving library data...")
     df.to_csv(CSV_FILE_LIBRARY, index=False, encoding='utf-8-sig')
     st.write("Library data saved successfully!")
+
 
 def issue_book(book_id, title, issued_to, issue_date):
     """Issue a new book, ensuring unique BookID."""
