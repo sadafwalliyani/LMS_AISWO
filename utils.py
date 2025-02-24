@@ -68,3 +68,18 @@ def get_issued_books():
     """Fetch books that are issued but not yet returned."""
     df = load_library_data()
     return df[(df['IssuedTo'].notna()) & (df['ReturnDate'].isna())]
+
+def register_user(full_name, classname, date_of_birth, address, phone_number, email):
+    """Register a new user."""
+    df = load_registration_data()
+    new_entry = pd.DataFrame([{
+        'Full Name': full_name,
+        'Class': classname,
+        'Date of Birth': date_of_birth,
+        'Address': address,
+        'Phone Number': phone_number,
+        'Email': email
+    }])
+    df = pd.concat([df, new_entry], ignore_index=True)
+    save_registration_data(df)
+    return True
