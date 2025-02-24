@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # ✅ Update this path with your actual Google Drive path
-GOOGLE_DRIVE_PATH = "https://drive.google.com/drive/folders/15VB3zFFaOHG0ii4h81qlEdFyi_xaQMGK?usp=drive_link"  
+GOOGLE_DRIVE_PATH = "G:\My Drive\AISWO-LMS"  
 
 CSV_FILE_LIBRARY = os.path.join(GOOGLE_DRIVE_PATH, "library_data.csv")
 CSV_FILE_REGISTRATION = os.path.join(GOOGLE_DRIVE_PATH, "registration_newuser.csv")
