@@ -1,6 +1,10 @@
 import pandas as pd
 import streamlit as st
-from utils import issue_book, register_user, return_book, get_issued_books 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from utils import issue_book, register_user, return_book, get_issued_books
 
 # Page configuration
 st.set_page_config(page_title="AISWO LIBRARY MANAGEMENT SYSTEM", layout="wide")
