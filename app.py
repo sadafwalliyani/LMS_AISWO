@@ -1,13 +1,19 @@
 import pandas as pd
 import streamlit as st
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-from utils import issue_book, register_user, return_book, get_issued_books
+from utils import issue_book, register_user, return_book, get_issued_books 
 
 # Page configuration
 st.set_page_config(page_title="AISWO LIBRARY MANAGEMENT SYSTEM", layout="wide")
+
+# Custom CSS for Styling
+st.markdown("""
+<style>
+.sidebar .sidebar-content {background-color: #079da4; color: white;}
+h1, h2, h3, h4, h5, h6 {color: #079da4;}
+.stButton button {background-color: #079da4; color: white; border-radius: 5px;}
+.stButton button:hover {background-color: #057a7f;}
+.stRadio label {color: black !important;}
+</style>""", unsafe_allow_html=True)
 
 # Sidebar Navigation
 with st.sidebar:
@@ -19,6 +25,7 @@ with st.sidebar:
 if page == "Home":
     st.title("📚 Currently Issued Books")
 
+    # Fetch the latest issued books data
     issued_books = get_issued_books()
 
     if not issued_books.empty:
@@ -31,16 +38,18 @@ if page == "Home":
                 cols[1].write(f"**Title:** {row['Title']}")
                 cols[2].write(f"**Issued To:** {row['IssuedTo']}")
 
+                # Convert IssueDate to datetime for display
                 issued_date = pd.to_datetime(row['IssueDate'], errors='coerce')
                 cols[3].write(f"**Issued On:** {issued_date.date() if pd.notna(issued_date) else 'N/A'}")
 
+                # Return Book Button
                 with cols[4]:
                     if st.button("Return ⏎", key=f"ret_{book_id}_{index}"):
                         return_date = pd.to_datetime("today").date()
                         
                         if return_book(book_id, return_date):
                             st.success(f"Book {book_id} returned!")
-                            st.rerun()
+                            st.rerun()  # 🔄 Immediately refresh UI after return
     else:
         st.write("No books are currently issued.")
 
@@ -49,6 +58,7 @@ elif page == "Issue Book":
     st.title("📖 Issue New Book")
 
     with st.form("issue_form"):
+        st.write("Fill in the details to issue a new book:")
         book_id = st.text_input("Book ID", key="book_id")
         title = st.text_input("Title", key="title")
         issued_to = st.text_input("Issued To", key="issued_to")
@@ -60,9 +70,11 @@ elif page == "Issue Book":
             else:
                 st.error("⚠ Error: Book ID already exists!")
 
+
 # 📌 Registration
 elif page == "Registration":
     st.title("📝 Register New User")
+    st.write("Fill in the details to register a new user:")
     with st.form("reg_form"):  
         full_name = st.text_input("Full Name", key="full_name")
         classname = st.text_input("Class", key="classname")
