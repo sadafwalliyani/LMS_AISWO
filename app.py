@@ -1,6 +1,12 @@
+import sys
+import os
+import importlib
 import pandas as pd
 import streamlit as st
-from utils import issue_book, register_user, return_book, get_issued_books 
+import utils
+importlib.reload(utils)  # Force Python to reload the module
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))  # Ensure utils.py is found
+from utils import issue_book, register_user, return_book, get_issued_books
 
 # Page configuration
 st.set_page_config(page_title="AISWO LIBRARY MANAGEMENT SYSTEM", layout="wide")
